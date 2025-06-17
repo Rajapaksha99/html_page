@@ -1,0 +1,21 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
+    replaceExistingArchive: true
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'Azure for Students'  # ← Match your actual Azure Subscription name here
+    appType: 'webApp'
+    appName: 'myhtmlappdemo'                # ← This must match your App Service name exactly
+    package: '$(Build.ArtifactStagingDirectory)/app.zip'
